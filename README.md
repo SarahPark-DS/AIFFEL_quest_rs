@@ -4,6 +4,7 @@
 
 ## 디렉토리 구조
 ```bash
+AIFFEL_quest_rs
 ├── Exploration
 │   ├── Ex01
 │   │   ├── .ipynb
