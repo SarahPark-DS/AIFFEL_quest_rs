@@ -4,7 +4,6 @@
 
 ## 디렉토리 구조
 ```bash
-AIFFEL_quest_rs
 ├── Exploration
 │   ├── Ex01
 │   │   ├── .ipynb
@@ -52,11 +51,9 @@ AIFFEL_quest_rs
 │   ├── Gd08
 │   │   ├── .ipynb
 │   │   └── README.md
-│   ├── Gd09
-│   │   ├── .ipynb
-│   │   └── README.md
-│   ├── .ipynb
-│   └── README.md
+│   └── Gd09
+│       ├── .ipynb
+│       └── README.md
 ├── MainQuest
 │   ├── Quest01
 │   │   ├── .ipynb
