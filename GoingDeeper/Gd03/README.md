@@ -42,7 +42,7 @@
         - 중요! 잘 작성되었다고 생각되는 부분을 캡쳐해 근거로 첨부
         - 
     * 실험 결과와 추가 시험 방향을 제안
-      ![image](https://github.com/user-attachments/assets/2a44830e-9d79-4c89-afca-b467007ab32d)
+    ![image](https://github.com/user-attachments/assets/2a44830e-9d79-4c89-afca-b467007ab32d)
 
 - [O]  **5. 코드가 간결하고 효율적인가요?**
     - 파이썬 스타일 가이드 (PEP8) 를 준수하였는지 확인
