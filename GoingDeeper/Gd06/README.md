@@ -18,7 +18,7 @@
 - [ ]  **3. 에러가 난 부분을 디버깅하여 문제를 해결한 기록을 남겼거나
 새로운 시도 또는 추가 실험을 수행해봤나요?**
     - Gensim 패키지 버전 오류 수정
-    ![image](https://github.com/user-attachments/assets/e58528fa-3c61-4ad4-a468-5d7f0b93f4dc)
+    ![image](https://github.com/user-attachments/assets/e58528fa-3c61-4ad4-a468-5d7f0b93f4dc)  
 
         
 - [ ]  **4. 회고를 잘 작성했나요?**
@@ -27,7 +27,7 @@
 
 - [ ]  **5. 코드가 간결하고 효율적인가요?**
     - 출력 기능이 들어간 깔끔한 전처리 함수
-    ![image](https://github.com/user-attachments/assets/222f9671-1430-4c44-a31b-731ea9171f7b) 
+    ![image](https://github.com/user-attachments/assets/222f9671-1430-4c44-a31b-731ea9171f7b)  
 
 
 # 회고(참고 링크 및 코드 개선)
