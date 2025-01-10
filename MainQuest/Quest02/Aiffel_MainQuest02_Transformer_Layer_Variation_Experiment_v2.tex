@@ -1,0 +1,202 @@
+% This must be in the first 5 lines to tell arXiv to use pdfLaTeX, which is strongly recommended.
+\pdfoutput=1
+% In particular, the hyperref package requires pdfLaTeX in order to break URLs across lines.
+
+\documentclass[11pt]{article}
+
+% Remove the "review" option to generate the final version.
+\usepackage[review]{emnlp2021}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{Impact of Transformer Depth on Small Datasets for Chatbot Models}
+% Author information can be set in various styles:
+% For several authors from the same institution:
+% \author{Author 1 \and ... \and Author n \\
+%         Address line \\ ... \\ Address line}
+% if the names do not fit well on one line use
+%         Author 1 \\ {\bf Author 2} \\ ... \\ {\bf Author n} \\
+% For authors from different institutions:
+% \author{Author 1 \\ Address line \\  ... \\ Address line
+%         \And  ... \And
+%         Author n \\ Address line \\ ... \\ Address line}
+% To start a seperate ``row'' of authors use \AND, as in
+% \author{Author 1 \\ Address line \\  ... \\ Address line
+%         \AND
+%         Author 2 \\ Address line \\ ... \\ Address line \And
+%         Author 3 \\ Address line \\ ... \\ Address line}
+
+\author{Saehee Park\\
+  Affiliation / Address line 1 \\
+  Affiliation / Address line 2 \\
+  Affiliation / Address line 3 \\
+  \texttt{sarah4282@gmail.com} \\\And
+  Second Author \\
+  Affiliation / Address line 1 \\
+  Affiliation / Address line 2 \\
+  Affiliation / Address line 3 \\
+  \texttt{email@domain} \\}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This study investigates the impact of transformer layer variations (2, 4, 8, and 16 layers) on the performance and efficiency of chatbot models trained on a small curated dataset. From the original DailyDialog dataset containing 76,052 samples, 10,000 instances were selected after preprocessing, including duplicate removal and filtering by token count (3–60). Evaluation metrics include BLEU, ROUGE, METEOR, and qualitative assessments. Results show that the 2-layer model balances efficiency and semantic performance during early training, while the 8-layer model achieves the best overall balance between performance and computational cost. The 16-layer model performs best in BLEU but offers diminishing returns in other metrics. These findings emphasize the importance of optimizing transformer depth for small datasets in low-resource scenarios.
+\end{abstract}
+
+\section{Introduction}
+
+Modern NLP models, particularly transformers, have demonstrated exceptional performance across tasks with large-scale datasets. However, challenges arise when applying such architectures to small datasets. This study evaluates the impact of varying transformer depth (2, 4, 8, and 16 layers) on model performance and computational efficiency in a small-data setting.
+
+
+\section{Background and Related Works}
+TBU
+
+\section{Method}
+\subsection{Dataset Preprocessing}
+The experiments were conducted using the DailyDialog dataset, a widely-used datasets for dialog generation tasks. The original dataset consists of 76,052 multi-turn conversational samples. To dapt the data for this study, the following preprocessing steps were applied:
+    \begin{enumerate}
+        \item \textbf{Duplicate Removal}: All duplicate samples were removed to ensure diversity in the training data and minimize inference of perplexity in model training.
+        \item \textbf{Token-length Filtering}: Dialog samples were filtered to retain only those with token counts between 3 and 60, ensuring meaningful yet manageable input lengths. 95\% of total training datasets are included in this range.
+        \item \textbf{Sample Selection}: A subset of 10,000 instances was randomly selected from the preprocessed dataset to simulate a small-scale training scenario.
+        \item \textbf{Tokenization}: Tokenization was performed using the NLTK punkt tokenizer and a vocabulary size of 15,000 tokens was constructed.
+    \end{enumerate}
+
+\subsection{Transformer Model Configuration}
+The configuration of the model follows the standard transformer design with a slight modification in embedding dimension size and variation in encoder and decoder layer numbers, ranging from 2, 4, 8 to 16. 
+\begin{itemize}
+    \item \textbf{Embedding Dimension ($d_{model}$):} 256\\ The weights of the embedding layers in the encoder and decoder are shared, since the source and target languages are the same (English).
+    \item \textbf{Number of Attention Heads ($n_{heads}$):} 8.
+    \item \textbf{Feedforward Layer Dimension ($d_{ff}$):} 1024.
+    \item \textbf{Dropout Rate:} 0.1.
+    \item \textbf{Positional Encoding:} Maximum sequence length of 128 tokens.
+\end{itemize}
+
+\subsection{Training Setup}
+The models were trained using the Adam optimizer with the following hyperparameters:
+    \begin{itemize}
+        \item \textbf{Epochs per model}: 10
+        \item \textbf{Learning Rate Scheduler}: Warm-up steps of 4,000, followed by inverse square root decay.
+        \item \textbf{Optimizer Parameters}:
+            \begin{center}
+                $\beta_1$ = 0.9, $\beta_2$ = 0.98, $\epsilon$ = $1e-9$
+            \end{center}
+        \item \textbf{Batch Size}: 64
+        \item \textbf{Loss Function}: Sparse Categorical Crossentropy, with a padding mask applied to ignore <pad> tokens in the input and target sequences.
+    \end{itemize}
+    
+\subsection{Evaluation Metrics}
+To assess model performance and training efficiency, following evaluations were performed:
+    \begin{enumerate}
+        \item \textbf{Quantitative Metrics for Text Generation}\\   
+        The 3 following evaluation metrics have scores between 0 to 1, and score above 0.2 is suggested for generative models.
+          \begin{itemize}
+            \item \textbf{BLEU}: Measures n-gram overlap between generated responses and ground truth. 
+            \item \textbf{ROUGE}: Evaluates overlap of longer sequences, and ROUGE-L was used for the experiments.
+            \item \textbf{METEOR}: Consider semantic similarity, penalizing over-reliance on exact matches
+        \end{itemize}
+        \item \textbf{Computational Efficiency Metrics}:
+            \begin{itemize}
+                \item Training Time Per Epoch: Time taken to complete one training epoch
+                \item Convergence Speed: Number of epochs required to achieve optimal performance
+            \end{itemize}
+    \end{enumerate}
+  
+
+\section{Result}
+\subsection{Training Efficiency}
+    \begin{enumerate}
+        \item Time per Epoch:
+        "Image"
+        \begin{itemize}
+            \item The 2-layer model exhibited the fastest training time (~91 seconds per epoch), making it highly efficient for small datasets.
+            \item Deeper models (e.g. 16-layer) had significant higher training times (~658 seconds per epoch), increasing computational costs substantially.
+        \end{itemize}
+
+        \item Convergent Speed:
+        \begin{itemize}
+            \item The 2-layer model achieved competitive performance in early epochs (e.g., within 10 epochs), particularly in METEOR and ROUGE, which suggests that shallower models may balance efficiency and performance during early-stage training with small dataset.
+            \item Deeper models, especially the 16-layer model, require more epochs to converge effectively, as indicated by their higher loss values.
+            \item Yet, the fluctuation of model performance observed within the 10 epochs indicates that the training epochs set for the experiment may not be sufficient for all models.
+        \end{itemize}
+    \end{enumerate}
+
+\subsection{Model Performance}
+\begin{table*}[t] % The [t] option places the table at the top of the page
+\centering
+\caption{Performance Metrics by Model Layer Depth} % Add a caption for the table
+\label{tab:performance_metrics} % Add a label for referencing
+\begin{tabular}{|c|c|c|c|p{7cm}|} % Define column alignment and a fixed-width column
+\hline
+\textbf{Layer} & \textbf{BLEU Avg} & \textbf{ROUGE Avg} & \textbf{METEOR Avg} & \textbf{Observations} \\ \hline
+2              & $0$                 & 0.0737             & 0.0413              & Strong semantic similarity and sequence overlap in early training. \\ \hline
+4              & $4.58e-157$            & 0.0330             & 0.0433              & Moderate performance; outperformed by 2-layer in METEOR and ROUGE. \\ \hline
+8              & $2.55e-157$            & 0.0276             & 0.0427              & Best ROUGE performance but struggled in METEOR. \\ \hline
+16             & $8.90e-157$            & 0.0248             & 0.0434              & Best BLEU performance but less semantic relevance. \\ \hline
+\end{tabular}
+\end{table*}
+    \begin{enumerate}
+        \item \textbf{BLEU}:
+            \begin{itemize}
+                \item Across all epochs, the 2-layer model consistently recorded a BLEU score of 0, indicating its inability to generate text with meaningful n-gram overlap.
+                \item Among the other models, the ranking of BLEU performance was 16 > 8 > 4 > 2, with the 16-layer model achieving the highest BLEU score.
+                \item Yet, BLEU scores of all models exceeding low (near-zero values), suggesting that BLEU might not be a reliable metric for assessing the quality of responses in this experiment.
+            \end{itemize}
+        \item \textbf{ROUGE}:
+            \begin{itemize}
+                \item The ranking for ROUGE performance was 8 > 2 > 16 > 4, with the 8-layer model achieving the highest ROUGE score. However, the 2-layer model performed better than deeper models like 16 and 4 layers in ROUGE.
+                \item Significant fluctuations in ROUGE scores were observed within the first 10 epochs, suggesting instability in capturing sequence-level overlap during training.
+                \item Similar to BLEU, ROUGE values were all below 0.08, indicating that none of the models could consistently generate meaningful textual content.
+            \end{itemize}
+        \item \textbf{METEOR}: 
+            \begin{itemize}
+                \item The 2-layer model outperformed all other models in METEOR at maximum, followed by 4 > 16 > 8, showcasing its ability to capture similarity better than deeper models in the early stages of training.
+                \item Like BLEU and ROUGE, all METEOR scores were below 0.08, further supporting the conclusion that the generated text lacked meaningful content.
+            \end{itemize}
+    \end{enumerate}
+
+
+
+\section{Conclusion}
+This study analyzed the impact of transformer layer depth on model performance and training efficiency for a chatbot model trained on a small dataset. Experiments with models having 2, 4, 8, and 16 layers revealed several key insights:
+
+\begin{itemize}
+    \item The \textbf{2-layer model} demonstrated strong semantic similarity and sequence overlap in the early stages of training, as reflected by the highest ROUGE and METEOR scores among shallow models. Its computational efficiency makes it well-suited for low-resource or early-training scenarios.
+    \item The \textbf{8-layer model} achieved the best overall balance of performance and efficiency, with strong ROUGE scores and moderate METEOR values. This configuration is recommended for generating more stable results over prolonged training on small datasets.
+    \item The \textbf{16-layer model} performed best in terms of BLEU score but showed limited semantic relevance and higher computational costs, making it less practical for small datasets or limited epochs.
+    \item Across all layers, BLEU, ROUGE, and METEOR scores remained below 0.08, indicating the difficulty of generating meaningful text with the given dataset size and experimental setup.
+\end{itemize}
+
+In conclusion, while deeper models such as the 16-layer transformer excel in BLEU, the results highlight the suitability of shallow models (e.g., 2 layers) for efficient and effective training in low-resource scenarios. For more balanced performance, the 8-layer configuration offers the best trade-off between quality and computational cost. Future work could explore techniques like data augmentation or transfer learning to improve the overall performance of transformers on small datasets.
+
+\section{Acknowledgements}
+TBU
+
+\section{References}
+\bibitem{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Lukasz Kaiser, and Illia Polosukhin.
+\textit{Attention is all you need.}
+Advances in neural information processing systems, 30, 2017.
+
+\end{document}
